@@ -1,1 +1,80 @@
-index.html
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>هوش ریاضی AI</title>
+<style>
+body{font-family:Tahoma,Arial;background:#f1f5ff;margin:0;color:#172554;text-align:center}
+header{background:#2456a6;color:white;padding:24px 12px}
+h1{margin:8px}
+main{max-width:650px;margin:25px auto;padding:15px}
+.card{background:white;padding:22px;border-radius:18px;box-shadow:0 3px 15px #ccd5e8;margin-bottom:18px}
+.robot{font-size:85px;animation:bounce 2s infinite}
+@keyframes bounce{50%{transform:translateY(-10px)}}
+select,textarea,button{font:inherit;padding:13px;border-radius:10px;border:1px solid #bbc9df;width:100%;box-sizing:border-box;margin:8px 0}
+button{background:#2456a6;color:white;border:0;cursor:pointer}
+#answer{line-height:2;text-align:right;white-space:pre-wrap}
+footer{padding:20px;color:#475569}
+</style>
+</head>
+<body>
+<header>
+<div>🤖</div>
+<h1>هوش ریاضی AI</h1>
+<div>زیر مجموعه مدرسه علی انصاری</div>
+</header>
+<main>
+<section class="card">
+<div class="robot">🤖</div>
+<h2>سلام! من ربات آموزشی تو هستم</h2>
+<p>سؤالت را بنویس تا با هم یاد بگیریم.</p>
+<select id="subject">
+<option>ریاضی</option><option>علوم</option>
+<option>فارسی</option><option>انگلیسی</option>
+</select>
+<textarea id="question" rows="4" placeholder="سؤالت را اینجا بنویس..."></textarea>
+<button onclick="answer()">پاسخ بده</button>
+<button onclick="listen()">🎙️ صحبت با ربات</button>
+<button onclick="speak()">🔊 خواندن پاسخ</button>
+<div class="card" id="answer">پاسخ ربات اینجا نمایش داده می‌شود.</div>
+</section>
+</main>
+<footer>مدیریت محمدرضا هوشیار</footer>
+<script>
+function answer(){
+let q=document.getElementById('question').value.trim();
+let s=document.getElementById('subject').value;
+let a=document.getElementById('answer');
+if(!q){a.textContent='لطفاً اول سؤالت را بنویس.';return;}
+if(s==='ریاضی'){
+let m=q.match(/^\s*(-?\d+(?:\.\d+)?)\s*([+*/])\s*(-?\d+(?:\.\d+)?)\s*$/);
+if(m){
+let x=Number(m[1]),y=Number(m[3]),r;
+if(m[2]==='+')r=x+y;
+if(m[2]==='-')r=x-y;
+if(m[2]==='*')r=x*y;
+if(m[2]==='/')r=y===0?'تقسیم بر صفر تعریف نشده است.':x/y;
+a.textContent='مرحله اول: عبارت را بررسی می‌کنیم.\nمرحله دوم: محاسبه را انجام می‌دهیم.\nپاسخ: '+r;
+}else{a.textContent='سؤال دریافت شد! برای پاسخ دقیق‌تر، فعلاً یک عبارت ساده مثل ۱۲+۵ یا ۸*۳ بنویس.';}
+}else{
+a.textContent='سؤال '+s+' دریافت شد! این نسخه نمایشی است و هنوز به هوش مصنوعی واقعی متصل نشده است.';
+}
+}
+function speak(){
+let t=document.getElementById('answer').textContent;
+let u=new SpeechSynthesisUtterance(t);u.lang='fa-IR';
+speechSynthesis.speak(u);
+}
+function listen(){
+let R=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!R){alert('مرورگر شما از تشخیص صدا پشتیبانی نمی‌کند.');return;}
+let r=new R();r.lang='fa-IR';r.onresult=e=>{
+document.getElementById('question').value=e.results[0][0].transcript;
+};r.start();
+}
+</script>
+</body>
+</html>
+
